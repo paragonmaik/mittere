@@ -2,13 +2,23 @@ package requester
 
 import (
 	"fmt"
+	"io"
 	"net/http"
-	"net/url"
+	"time"
 )
 
-func Request() {
-	resp, err := http.PostForm("http://localhost:3000/login",
-		url.Values{"email": {"donkey@example.com"}, "password": {"12345678"}})
+var client *http.Client
 
-	fmt.Print(resp, err)
+func GetResp(url string) {
+	resp, _ := http.Get(url)
+	respData, _ := io.ReadAll(resp.Body)
+
+	fmt.Print(string(respData))
+}
+
+func Request() {
+	client = &http.Client{Timeout: 10 * time.Second}
+
+	//GetResponse("https://pokeapi.co/api/v2/pokemon/ditto")
+	GetResp("https://jsonplaceholder.typicode.com/todos/1")
 }
