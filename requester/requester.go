@@ -1,6 +1,7 @@
 package requester
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -9,11 +10,27 @@ import (
 
 var client *http.Client
 
+type Data struct {
+	//field map[string]interface{}
+	data map[string]json.RawMessage
+}
+
 func GetResp(url string) {
 	resp, _ := http.Get(url)
 	respData, _ := io.ReadAll(resp.Body)
+	//var data map[string]interface{}
+	var data Data
 
-	fmt.Print(string(respData))
+	err := json.Unmarshal(respData, &data.data)
+	if err != nil {
+		fmt.Print(err)
+	}
+
+	//fmt.Print(data.data)
+	//fmt.Print(string(respData))
+	for k, v := range data.data {
+		fmt.Printf("%v %v \n", k, string(v))
+	}
 }
 
 func Request() {
