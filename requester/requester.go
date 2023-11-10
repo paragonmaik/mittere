@@ -28,9 +28,11 @@ func GetResp(url string) {
 
 	//fmt.Print(data.data)
 	//fmt.Print(string(respData))
+	fmt.Printf("{\n")
 	for k, v := range data.data {
-		fmt.Printf("%v %v \n", k, string(v))
+		fmt.Printf("\t%v %v, \n", k, string(v))
 	}
+	fmt.Printf("}\n")
 }
 
 func Request() {
