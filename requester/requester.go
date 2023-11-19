@@ -7,6 +7,8 @@ import (
 	"net/http"
 	// "os"
 	"time"
+
+	"mittere/reader"
 )
 
 var client *http.Client
@@ -42,8 +44,10 @@ func Request(httpMethod string, urlPath string) {
 	client = &http.Client{Timeout: 10 * time.Second}
 
 	// GetResp("https://jsonplaceholder.typicode.com/todos/1")
-	switch httpMethod {
-	case "get":
-		GetResp(urlPath)
-	}
+	// switch httpMethod {
+	// case "get":
+	// GetResp(urlPath)
+	// }
+
+	reader.Read()
 }
