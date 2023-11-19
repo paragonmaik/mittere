@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	// "os"
 	"time"
 )
 
@@ -28,14 +29,17 @@ func GetResp(url string) {
 
 	//fmt.Print(data.data)
 	//fmt.Print(string(respData))
-	fmt.Printf("{\n")
-	for k, v := range data.data {
-		fmt.Printf("\t%v %v, \n", k, string(v))
-	}
-	fmt.Printf("}\n")
+	//	fmt.Printf("{\n")
+	// for k, v := range data.data {
+	// fmt.Printf("\t%v %v, \n", k, string(v))
+	// }
+	// fmt.Printf("}\n")
+
+	// fmt.Println(os.Args[1:])
 }
 
-func Request() {
+func Request(urlPath string) {
+	fmt.Println(urlPath)
 	client = &http.Client{Timeout: 10 * time.Second}
 
 	//GetResponse("https://pokeapi.co/api/v2/pokemon/ditto")

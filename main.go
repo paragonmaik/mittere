@@ -5,11 +5,8 @@ package main
 
 import (
 	"mittere/cmd"
-	"mittere/requester"
 )
 
 func main() {
 	cmd.Execute()
-
-	requester.Request()
 }
