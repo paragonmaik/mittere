@@ -49,5 +49,5 @@ func Request(httpMethod string, urlPath string) {
 	// GetResp(urlPath)
 	// }
 
-	reader.Read()
+	reader.Read("main.json")
 }
