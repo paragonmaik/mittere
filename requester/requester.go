@@ -38,10 +38,12 @@ func GetResp(url string) {
 }
 
 func Request(httpMethod string, urlPath string) {
-	fmt.Println(httpMethod)
+	// fmt.Println(httpMethod)
 	client = &http.Client{Timeout: 10 * time.Second}
 
-	//GetResponse("https://pokeapi.co/api/v2/pokemon/ditto")
 	// GetResp("https://jsonplaceholder.typicode.com/todos/1")
-	GetResp(urlPath)
+	switch httpMethod {
+	case "get":
+		GetResp(urlPath)
+	}
 }
