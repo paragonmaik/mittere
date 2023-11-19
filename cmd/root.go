@@ -12,7 +12,8 @@ import (
 )
 
 var (
-	urlPath string
+	urlPath    string
+	htppMethod string
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -22,7 +23,7 @@ var rootCmd = &cobra.Command{
 	Long:    ``,
 	Version: "0.1",
 	Run: func(cmd *cobra.Command, args []string) {
-		requester.Request(urlPath)
+		requester.Request(htppMethod, urlPath)
 	},
 }
 
@@ -55,4 +56,7 @@ func init() {
 		fmt.Println(err)
 		//TODO: add custom error
 	}
+
+	rootCmd.Flags().StringVarP(&htppMethod, "method", "m",
+		"get", "HTTP method")
 }

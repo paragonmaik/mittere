@@ -34,12 +34,11 @@ func GetResp(url string) {
 		fmt.Printf("\t%v %v, \n", k, string(v))
 	}
 	fmt.Printf("}\n")
-
 	// fmt.Println(os.Args[1:])
 }
 
-func Request(urlPath string) {
-	// fmt.Println(urlPath)
+func Request(httpMethod string, urlPath string) {
+	fmt.Println(httpMethod)
 	client = &http.Client{Timeout: 10 * time.Second}
 
 	//GetResponse("https://pokeapi.co/api/v2/pokemon/ditto")
