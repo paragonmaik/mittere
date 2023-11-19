@@ -27,21 +27,22 @@ func GetResp(url string) {
 		fmt.Print(err)
 	}
 
-	//fmt.Print(data.data)
-	//fmt.Print(string(respData))
-	//	fmt.Printf("{\n")
-	// for k, v := range data.data {
-	// fmt.Printf("\t%v %v, \n", k, string(v))
-	// }
-	// fmt.Printf("}\n")
+	// fmt.Print(data.data)
+	// fmt.Print(string(respData))
+	fmt.Printf("{\n")
+	for k, v := range data.data {
+		fmt.Printf("\t%v %v, \n", k, string(v))
+	}
+	fmt.Printf("}\n")
 
 	// fmt.Println(os.Args[1:])
 }
 
 func Request(urlPath string) {
-	fmt.Println(urlPath)
+	// fmt.Println(urlPath)
 	client = &http.Client{Timeout: 10 * time.Second}
 
 	//GetResponse("https://pokeapi.co/api/v2/pokemon/ditto")
-	GetResp("https://jsonplaceholder.typicode.com/todos/1")
+	// GetResp("https://jsonplaceholder.typicode.com/todos/1")
+	GetResp(urlPath)
 }
