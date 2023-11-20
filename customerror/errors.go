@@ -2,7 +2,6 @@ package customerror
 
 import (
 	"errors"
-	// "fmt"
 )
 
 var (

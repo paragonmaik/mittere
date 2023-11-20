@@ -7,12 +7,16 @@ import (
 	"path/filepath"
 )
 
+var (
+	supportedExtensions []string
+)
+
 func Read(filePath string) string {
 	fileExt := filepath.Ext(filePath)
 
 	// fmt.Println(fileExt)
 
-	if fileExt != ".json" {
+	if fileExt != ".go" {
 		fmt.Printf("Unsupported file type")
 	}
 
@@ -27,7 +31,7 @@ func Read(filePath string) string {
 
 	parsedData := string(data)
 
-	fmt.Println(parsedData)
+	// fmt.Println(parsedData)
 
 	return parsedData
 }
