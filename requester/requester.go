@@ -22,18 +22,20 @@ type Data struct {
 
 // TODO: use http.NewRequest(method, url, body)
 
-func PostResp(url string) {
-	body := strings.NewReader(`
-    {
-    "title": "foo",
-    "body": "bar",
-    "userId": 1,
-    }
-    `,
-	)
+func PostResp(url, data string) {
+	// body passa a ser valor lido do arquivo
+	body2 := strings.NewReader(data)
+	// body := strings.NewReader(`
+	// {
+	// "title": "foo",
+	// "body": "bar",
+	// "userId": 1,
+	// }
+	// `,
+	// )
 
 	res, err := client.Post(url, "application/json;",
-		body)
+		body2)
 	if err != nil {
 		fmt.Print(err)
 	}
@@ -43,6 +45,7 @@ func PostResp(url string) {
 	content, _ := io.ReadAll(res.Body)
 
 	fmt.Println(string(content))
+
 	// req, err := http.NewRequest(http.MethodPost, url, body)
 	// if err != nil {
 	// fmt.Print(err)
@@ -85,13 +88,13 @@ func Request(httpMethod string, urlPath string) {
 
 	normalizedMethod := strings.ToUpper(httpMethod)
 
-	reader.Read("main.go")
+	data := reader.Read("test.json")
 
 	switch normalizedMethod {
 	case http.MethodGet:
 		GetResp(urlPath)
 	case http.MethodPost:
-		PostResp("https://jsonplaceholder.typicode.com/posts")
+		PostResp("https://jsonplaceholder.typicode.com/posts", data)
 	}
 
 }
