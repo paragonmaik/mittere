@@ -6,10 +6,7 @@ import (
 	"mittere/customerror"
 	"os"
 	"path/filepath"
-)
-
-var (
-	supportedExtensions []string
+	// "strings"
 )
 
 // define types in file
@@ -20,41 +17,42 @@ type Request struct {
 	Data    json.RawMessage `json:"data"`
 }
 
-func unmarshalRequest(filepath string) {
-	content, err := os.ReadFile(filepath)
-	if err != nil {
-		fmt.Println(err.Error())
-	}
+func unmarshalRequest(content []byte) Request {
 	request := Request{}
 
-	err2 := json.Unmarshal(content, &request)
-	if err2 != nil {
-		fmt.Println(err2)
-	}
-
-	fmt.Printf("%s \n", request)
-}
-
-func Read(filePath string) string {
-	fileExt := filepath.Ext(filePath)
-
-	// fmt.Println(fileExt)
-	unmarshalRequest(filePath)
-
-	if fileExt != ".json" {
-		fmt.Printf("Unsupported file type")
-	}
-
-	data, err := os.ReadFile(filePath)
+	err := json.Unmarshal(content, &request)
 	if err != nil {
-		// fmt.Printf("Error: %d", err)
-		fmt.Println("Unsupported file extension: ",
-			customerror.ErrValidation)
-		//TODO: pass file extension as argument
+		fmt.Println(err)
+		// TODO: add custom error
 		os.Exit(1)
 	}
 
-	parsedData := string(data)
+	return request
+}
 
-	return parsedData
+func Read(filePath string) Request {
+	fileExt := filepath.Ext(filePath)
+
+	var request Request
+
+	if fileExt == ".json" {
+		content, err := os.ReadFile(filePath)
+
+		if err != nil {
+			fmt.Println("file error: ",
+				customerror.ErrValidation)
+			//TODO: pass file extension as argument
+			os.Exit(1)
+		}
+		request = unmarshalRequest(content)
+
+	} else if fileExt == ".yml" || fileExt == ".yaml" {
+		return request
+
+	} else {
+		fmt.Printf("Unsupported file type")
+		os.Exit(1)
+	}
+
+	return request
 }
