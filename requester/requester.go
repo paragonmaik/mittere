@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"strings"
 
 	// "os"
@@ -20,12 +21,18 @@ type Data struct {
 	data map[string]json.RawMessage
 }
 
-// define types in file
-type Request struct {
-	Body string `json:"body"`
-}
+func handleUrl(envUrl, fileUrl string) string {
+	if envUrl == "" && fileUrl == "" {
+		fmt.Println("URL is required")
+		os.Exit(1)
+	}
 
-// TODO: use http.NewRequest(method, url, body)
+	if envUrl == "" {
+		return fileUrl
+	}
+
+	return envUrl
+}
 
 func postResp(url, data string) {
 	// body passa a ser valor lido do arquivo
@@ -39,7 +46,7 @@ func postResp(url, data string) {
 	// `,
 	// )
 
-	fmt.Println(body2)
+	// fmt.Println(body2)
 
 	res, err := client.Post(url, "application/json;",
 		body2)
@@ -48,6 +55,8 @@ func postResp(url, data string) {
 	}
 
 	defer res.Body.Close()
+
+	// fmt.Println(body2)
 
 	content, _ := io.ReadAll(res.Body)
 
@@ -91,18 +100,17 @@ func getResp(url string) {
 }
 
 func ExecRequest(httpMethod string, urlPath string) {
-	// fmt.Println(httpMethod)
 	client = &http.Client{Timeout: 10 * time.Second}
 
 	normalizedMethod := strings.ToUpper(httpMethod)
 
 	data := reader.Read("test.json")
+	url := handleUrl(urlPath, data.Url)
 
 	switch normalizedMethod {
 	case http.MethodGet:
-		getResp(urlPath)
+		getResp(url)
 	case http.MethodPost:
-		postResp("https://jsonplaceholder.typicode.com/posts", data)
+		postResp(url, string(data.Data))
 	}
-
 }
