@@ -1,12 +1,14 @@
 package reader
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
-	"gopkg.in/yaml.v2"
 	"mittere/customerror"
 	"os"
 	"path/filepath"
+
+	"gopkg.in/yaml.v2"
 	// "strings"
 )
 
@@ -18,10 +20,10 @@ type RequestJson struct {
 }
 
 type RequestYml struct {
-	Url     string `yaml:"url"`
-	Method  string `yaml:"method"`
-	Headers string `yaml:"headers"`
-	Data    string `yaml:"data"`
+	Url     string            `yaml:"url"`
+	Method  string            `yaml:"method"`
+	Headers string            `yaml:"headers"`
+	Data    map[string]string `yaml:"data"`
 }
 
 type Request struct {
@@ -29,6 +31,14 @@ type Request struct {
 	Method  string
 	Headers string
 	Data    string
+}
+
+func mapToString(m map[string]string) string {
+	b := new(bytes.Buffer)
+	for k, v := range m {
+		fmt.Fprintf(b, "%s=\"%s\"\n", k, v)
+	}
+	return b.String()
 }
 
 func unmarshalRequestJson(content []byte) RequestJson {
@@ -91,7 +101,7 @@ func Read(filePath string) Request {
 		requestYml = unmarshalRequestYml(content)
 
 		request.Url = requestYml.Url
-		request.Data = requestYml.Data
+		request.Data = mapToString(requestYml.Data)
 		request.Method = requestYml.Method
 		request.Headers = requestYml.Headers
 
