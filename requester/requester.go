@@ -74,26 +74,31 @@ func postResp(url, data string, headers map[string]string) {
 	defer res.Body.Close()
 }
 
-func getResp(url string) {
-	//TODO: handle error
-	resp, _ := client.Get(url)
-	respData, _ := io.ReadAll(resp.Body)
-	//var data map[string]interface{}
-	var data Data
-
-	err := json.Unmarshal(respData, &data.data)
+func getResp(url string, headers map[string]string) {
+	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
+		// TODO: add error
 		fmt.Print(err)
 	}
 
-	// fmt.Print(data.data)
-	// fmt.Print(string(respData))
-	fmt.Printf("{\n")
-	for k, v := range data.data {
-		fmt.Printf("\t%v %v, \n", k, string(v))
+	req.Header = http.Header{
+		"Content-Type":  {headers["Content-Type"]},
+		"Authorization": {headers["Authorization"]},
 	}
-	fmt.Printf("}\n")
-	// fmt.Println(os.Args[1:])
+
+	res, err := client.Do(req)
+	if err != nil {
+		// TODO: add error
+		fmt.Print(err)
+	}
+
+	defer res.Body.Close()
+
+	content, _ := io.ReadAll(res.Body)
+
+	fmt.Println(string(content))
+
+	defer res.Body.Close()
 }
 
 func ExecRequest(httpMethod, urlPath, filepath string) {
@@ -111,7 +116,7 @@ func ExecRequest(httpMethod, urlPath, filepath string) {
 
 	switch method {
 	case http.MethodGet:
-		getResp(url)
+		getResp(url, data.Headers)
 	case http.MethodPost:
 		postResp(url, data.Data, data.Headers)
 	}
