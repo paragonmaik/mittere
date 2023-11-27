@@ -4,12 +4,10 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"mittere/customerror"
 	"os"
 	"path/filepath"
 
 	"gopkg.in/yaml.v2"
-	// "strings"
 )
 
 type RequestJson struct {
@@ -22,7 +20,7 @@ type RequestJson struct {
 type RequestYml struct {
 	Url     string            `yaml:"url"`
 	Method  string            `yaml:"method"`
-	Headers string            `yaml:"headers"`
+	Headers map[string]string `yaml:"headers"`
 	Data    map[string]string `yaml:"data"`
 }
 
@@ -46,8 +44,7 @@ func unmarshalRequestJson(content []byte) RequestJson {
 
 	err := json.Unmarshal(content, &request)
 	if err != nil {
-		fmt.Println(err)
-		// TODO: add custom error
+		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
 
@@ -59,16 +56,14 @@ func unmarshalRequestYml(content []byte) RequestYml {
 
 	err := yaml.Unmarshal(content, &request)
 	if err != nil {
-		fmt.Println(err)
-		// TODO: add custom error
+		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
 
 	return request
 }
 
-// return values individually
-func Read(filePath string) Request {
+func Read(filePath string) (Request, error) {
 	fileExt := filepath.Ext(filePath)
 
 	var requestJson RequestJson
@@ -78,10 +73,8 @@ func Read(filePath string) Request {
 	if fileExt == ".json" {
 		content, err := os.ReadFile(filePath)
 		if err != nil {
-			fmt.Println("file error: ",
-				customerror.ErrValidation)
-			//TODO: pass file extension as argument
-			os.Exit(1)
+			return request, &readErr{step: "read file",
+				msg: "read file failed", cause: err}
 		}
 		requestJson = unmarshalRequestJson(content)
 
@@ -93,22 +86,20 @@ func Read(filePath string) Request {
 	} else if fileExt == ".yml" || fileExt == ".yaml" {
 		content, err := os.ReadFile(filePath)
 		if err != nil {
-			fmt.Println("file error: ",
-				customerror.ErrValidation)
-			//TODO: pass file extension as argument
-			os.Exit(1)
+			return request, &readErr{step: "read file",
+				msg: "read file failed", cause: err}
 		}
 		requestYml = unmarshalRequestYml(content)
 
 		request.Url = requestYml.Url
 		request.Data = mapToString(requestYml.Data)
 		request.Method = requestYml.Method
-		request.Headers = requestYml.Headers
+		request.Headers = mapToString(requestYml.Headers)
 
 	} else {
-		fmt.Printf("Unsupported file type\n")
-		os.Exit(1)
+		return request, &readErr{step: "read file",
+			msg: "read file failed", cause: ErrInvalidExt}
 	}
 
-	return request
+	return request, nil
 }
