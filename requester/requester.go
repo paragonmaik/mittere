@@ -50,8 +50,8 @@ func postResp(url, data string, headers map[string]string) {
 
 	req, err := http.NewRequest("POST", url, body)
 	if err != nil {
-		// TODO: add error
-		fmt.Print(err)
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
 	}
 
 	req.Header = http.Header{
@@ -61,8 +61,8 @@ func postResp(url, data string, headers map[string]string) {
 
 	res, err := client.Do(req)
 	if err != nil {
-		// TODO: add error
-		fmt.Print(err)
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
 	}
 
 	defer res.Body.Close()
@@ -77,8 +77,8 @@ func postResp(url, data string, headers map[string]string) {
 func getResp(url string, headers map[string]string) {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		// TODO: add error
-		fmt.Print(err)
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
 	}
 
 	req.Header = http.Header{
@@ -88,8 +88,8 @@ func getResp(url string, headers map[string]string) {
 
 	res, err := client.Do(req)
 	if err != nil {
-		// TODO: add error
-		fmt.Print(err)
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
 	}
 
 	defer res.Body.Close()
