@@ -8,7 +8,6 @@ import (
 	"os"
 	"strings"
 
-	// "os"
 	"time"
 
 	"mittere/reader"
@@ -46,11 +45,23 @@ func handleMethod(envMethod, fileMethod string) string {
 	return envMethod
 }
 
-func postResp(url, data string) {
-	body2 := strings.NewReader(data)
-	res, err := client.Post(url, "application/json;",
-		body2)
+func postResp(url, data string, headers map[string]string) {
+	body := strings.NewReader(data)
+
+	req, err := http.NewRequest("POST", url, body)
 	if err != nil {
+		// TODO: add error
+		fmt.Print(err)
+	}
+
+	req.Header = http.Header{
+		"Content-Type":  {headers["Content-Type"]},
+		"Authorization": {headers["Authorization"]},
+	}
+
+	res, err := client.Do(req)
+	if err != nil {
+		// TODO: add error
 		fmt.Print(err)
 	}
 
@@ -93,7 +104,7 @@ func ExecRequest(httpMethod, urlPath, filepath string) {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
-	fmt.Println(data)
+	// fmt.Println(data.Headers)
 	url := handleUrl(urlPath, data.Url)
 	method := handleMethod(strings.ToUpper(httpMethod),
 		strings.ToUpper(data.Method))
@@ -102,6 +113,6 @@ func ExecRequest(httpMethod, urlPath, filepath string) {
 	case http.MethodGet:
 		getResp(url)
 	case http.MethodPost:
-		postResp(url, string(data.Data))
+		postResp(url, data.Data, data.Headers)
 	}
 }
