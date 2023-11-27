@@ -17,7 +17,6 @@ import (
 var client *http.Client
 
 type Data struct {
-	//field map[string]interface{}
 	data map[string]json.RawMessage
 }
 
@@ -34,20 +33,21 @@ func handleUrl(envUrl, fileUrl string) string {
 	return envUrl
 }
 
+func handleMethod(envMethod, fileMethod string) string {
+	if envMethod == "" && fileMethod == "" {
+		fmt.Println("Method is required")
+		os.Exit(1)
+	}
+
+	if envMethod == "" {
+		return fileMethod
+	}
+
+	return envMethod
+}
+
 func postResp(url, data string) {
-	// body passa a ser valor lido do arquivo
 	body2 := strings.NewReader(data)
-	// body := strings.NewReader(`
-	// {
-	// "title": "foo",
-	// "body": "bar",
-	// "userId": 1,
-	// }
-	// `,
-	// )
-
-	// fmt.Println(body2)
-
 	res, err := client.Post(url, "application/json;",
 		body2)
 	if err != nil {
@@ -56,25 +56,11 @@ func postResp(url, data string) {
 
 	defer res.Body.Close()
 
-	// fmt.Println(body2)
-
 	content, _ := io.ReadAll(res.Body)
 
 	fmt.Println(string(content))
 
-	// req, err := http.NewRequest(http.MethodPost, url, body)
-	// if err != nil {
-	// fmt.Print(err)
-	// }
-
-	// fmt.Println(req)
-
-	// r, err := newClient().Do(req)
-	// if err != nil {
-	// fmt.Println(err)
-	// }
-
-	// defer r.Body.Close()
+	defer res.Body.Close()
 }
 
 func getResp(url string) {
@@ -99,15 +85,20 @@ func getResp(url string) {
 	// fmt.Println(os.Args[1:])
 }
 
-func ExecRequest(httpMethod string, urlPath string) {
+func ExecRequest(httpMethod, urlPath, filepath string) {
 	client = &http.Client{Timeout: 10 * time.Second}
 
-	normalizedMethod := strings.ToUpper(httpMethod)
-
-	data := reader.Read("test.json")
+	data, err := reader.Read(filepath)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+	fmt.Println(data)
 	url := handleUrl(urlPath, data.Url)
+	method := handleMethod(strings.ToUpper(httpMethod),
+		strings.ToUpper(data.Method))
 
-	switch normalizedMethod {
+	switch method {
 	case http.MethodGet:
 		getResp(url)
 	case http.MethodPost:

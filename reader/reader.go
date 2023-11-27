@@ -11,10 +11,10 @@ import (
 )
 
 type RequestJson struct {
-	Url     string          `json:"url"`
-	Method  string          `json:"method"`
-	Headers json.RawMessage `json:"headers"`
-	Data    json.RawMessage `json:"data"`
+	Url     string            `json:"url"`
+	Method  string            `json:"method"`
+	Headers map[string]string `json:"headers"`
+	Data    json.RawMessage   `json:"data"`
 }
 
 type RequestYml struct {
@@ -27,7 +27,7 @@ type RequestYml struct {
 type Request struct {
 	Url     string
 	Method  string
-	Headers string
+	Headers map[string]string
 	Data    string
 }
 
@@ -81,7 +81,7 @@ func Read(filePath string) (Request, error) {
 		request.Url = requestJson.Url
 		request.Data = string(requestJson.Data)
 		request.Method = requestJson.Method
-		request.Headers = string(requestJson.Headers)
+		request.Headers = requestJson.Headers
 
 	} else if fileExt == ".yml" || fileExt == ".yaml" {
 		content, err := os.ReadFile(filePath)
@@ -94,7 +94,7 @@ func Read(filePath string) (Request, error) {
 		request.Url = requestYml.Url
 		request.Data = mapToString(requestYml.Data)
 		request.Method = requestYml.Method
-		request.Headers = mapToString(requestYml.Headers)
+		request.Headers = requestYml.Headers
 
 	} else {
 		return request, &readErr{step: "read file",
