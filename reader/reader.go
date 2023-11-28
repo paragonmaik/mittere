@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"mittere/errs"
 	"os"
 	"path/filepath"
 
@@ -73,8 +74,8 @@ func Read(filePath string) (Request, error) {
 	if fileExt == ".json" {
 		content, err := os.ReadFile(filePath)
 		if err != nil {
-			return request, &readErr{step: "read file",
-				msg: "read file failed", cause: err}
+			return request, &errs.ReadErr{Step: "read file",
+				Msg: "read file failed", Cause: err}
 		}
 		requestJson = unmarshalRequestJson(content)
 
@@ -86,8 +87,8 @@ func Read(filePath string) (Request, error) {
 	} else if fileExt == ".yml" || fileExt == ".yaml" {
 		content, err := os.ReadFile(filePath)
 		if err != nil {
-			return request, &readErr{step: "read file",
-				msg: "read file failed", cause: err}
+			return request, &errs.ReadErr{Step: "read file",
+				Msg: "read file failed", Cause: err}
 		}
 		requestYml = unmarshalRequestYml(content)
 
@@ -97,8 +98,8 @@ func Read(filePath string) (Request, error) {
 		request.Headers = requestYml.Headers
 
 	} else {
-		return request, &readErr{step: "read file",
-			msg: "read file failed", cause: ErrInvalidExt}
+		return request, &errs.ReadErr{Step: "read file",
+			Msg: "read file failed", Cause: errs.ErrInvalidExt}
 	}
 
 	return request, nil

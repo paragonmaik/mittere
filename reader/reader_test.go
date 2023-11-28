@@ -1,12 +1,8 @@
 package reader
 
 import (
-	// "encoding/json"
-	// "os"
-	// "bytes"
-	// "fmt"
-
 	"errors"
+	"mittere/errs"
 	"testing"
 )
 
@@ -40,12 +36,12 @@ func TestReader(t *testing.T) {
 		{
 			name:        "test 3",
 			filepath:    "../testdata/testErr.txt",
-			expectedErr: &readErr{step: "read file"},
+			expectedErr: &errs.ReadErr{Step: "read file"},
 		},
 		{
 			name:        "test 4",
 			filepath:    "../testdata/nonExistantFile.json",
-			expectedErr: &readErr{step: "read file"},
+			expectedErr: &errs.ReadErr{Step: "read file"},
 		},
 	}
 
