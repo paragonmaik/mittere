@@ -8,9 +8,9 @@ import (
 	"os"
 	"strings"
 
-	"time"
-
+	"mittere/errs"
 	"mittere/reader"
+	"time"
 )
 
 var client *http.Client
@@ -19,30 +19,32 @@ type Data struct {
 	data map[string]json.RawMessage
 }
 
-func handleUrl(envUrl, fileUrl string) string {
+func handleUrl(envUrl, fileUrl string) (string, error) {
 	if envUrl == "" && fileUrl == "" {
-		fmt.Println("URL is required")
-		os.Exit(1)
+		return "", &errs.ReadErr{Step: "set up request",
+			Msg:   "URL is required",
+			Cause: errs.ErrInvalidUrl}
 	}
 
 	if envUrl == "" {
-		return fileUrl
+		return fileUrl, nil
 	}
 
-	return envUrl
+	return envUrl, nil
 }
 
-func handleMethod(envMethod, fileMethod string) string {
+func handleMethod(envMethod, fileMethod string) (string, error) {
 	if envMethod == "" && fileMethod == "" {
-		fmt.Println("Method is required")
-		os.Exit(1)
+		return "", &errs.ReadErr{Step: "set up request",
+			Msg:   "request method is required",
+			Cause: errs.ErrInvalidMethod}
 	}
 
 	if envMethod == "" {
-		return fileMethod
+		return fileMethod, nil
 	}
 
-	return envMethod
+	return envMethod, nil
 }
 
 func makeRequest(url, data, method string, headers map[string]string) {
@@ -83,9 +85,19 @@ func ExecRequest(httpMethod, urlPath, filepath string) {
 		os.Exit(1)
 	}
 
-	url := handleUrl(urlPath, data.Url)
-	method := handleMethod(strings.ToUpper(httpMethod),
-		strings.ToUpper(data.Method))
+	url, err := handleUrl(urlPath, data.Url)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 
+	method, err := handleMethod(strings.ToUpper(httpMethod),
+		strings.ToUpper(data.Method))
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+
+	// return request values to pass to the writer package
 	makeRequest(url, data.Data, method, data.Headers)
 }

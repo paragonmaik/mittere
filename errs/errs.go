@@ -6,7 +6,9 @@ import (
 )
 
 var (
-	ErrInvalidExt = errors.New("unsupported file extension")
+	ErrInvalidExt    = errors.New("unsupported file extension")
+	ErrInvalidMethod = errors.New("unsupported HTTP method")
+	ErrInvalidUrl    = errors.New("unsupported HTTP method")
 )
 
 type ReadErr struct {
