@@ -45,7 +45,7 @@ func handleMethod(envMethod, fileMethod string) string {
 	return envMethod
 }
 
-func postResp(url, data string, headers map[string]string) {
+func request(url, data string, headers map[string]string) {
 	body := strings.NewReader(data)
 
 	req, err := http.NewRequest("POST", url, body)
@@ -74,7 +74,7 @@ func postResp(url, data string, headers map[string]string) {
 	defer res.Body.Close()
 }
 
-func getResp(url string, headers map[string]string) {
+func datalessRequest(url string, headers map[string]string) {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
@@ -109,15 +109,15 @@ func ExecRequest(httpMethod, urlPath, filepath string) {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
-	// fmt.Println(data.Headers)
+
 	url := handleUrl(urlPath, data.Url)
 	method := handleMethod(strings.ToUpper(httpMethod),
 		strings.ToUpper(data.Method))
 
 	switch method {
 	case http.MethodGet:
-		getResp(url, data.Headers)
+		datalessRequest(url, data.Headers)
 	case http.MethodPost:
-		postResp(url, data.Data, data.Headers)
+		request(url, data.Data, data.Headers)
 	}
 }
