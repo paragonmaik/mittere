@@ -1,7 +1,6 @@
 package requester
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -14,10 +13,6 @@ import (
 )
 
 var client *http.Client
-
-type Data struct {
-	data map[string]json.RawMessage
-}
 
 func handleUrl(envUrl, fileUrl string) (string, error) {
 	if envUrl == "" && fileUrl == "" {
