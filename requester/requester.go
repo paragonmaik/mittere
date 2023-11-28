@@ -45,37 +45,10 @@ func handleMethod(envMethod, fileMethod string) string {
 	return envMethod
 }
 
-func request(url, data string, headers map[string]string) {
+func makeRequest(url, data, method string, headers map[string]string) {
 	body := strings.NewReader(data)
 
-	req, err := http.NewRequest("POST", url, body)
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
-	}
-
-	req.Header = http.Header{
-		"Content-Type":  {headers["Content-Type"]},
-		"Authorization": {headers["Authorization"]},
-	}
-
-	res, err := client.Do(req)
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
-	}
-
-	defer res.Body.Close()
-
-	content, _ := io.ReadAll(res.Body)
-
-	fmt.Println(string(content))
-
-	defer res.Body.Close()
-}
-
-func datalessRequest(url string, headers map[string]string) {
-	req, err := http.NewRequest("GET", url, nil)
+	req, err := http.NewRequest(method, url, body)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
@@ -114,10 +87,5 @@ func ExecRequest(httpMethod, urlPath, filepath string) {
 	method := handleMethod(strings.ToUpper(httpMethod),
 		strings.ToUpper(data.Method))
 
-	switch method {
-	case http.MethodGet:
-		datalessRequest(url, data.Headers)
-	case http.MethodPost:
-		request(url, data.Data, data.Headers)
-	}
+	makeRequest(url, data.Data, method, data.Headers)
 }
