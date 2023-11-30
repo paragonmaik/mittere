@@ -15,6 +15,7 @@ var (
 	urlPath    string
 	htppMethod string
 	filepath   string
+	colorize   bool
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -24,7 +25,8 @@ var rootCmd = &cobra.Command{
 	Long:    ``,
 	Version: "0.1",
 	Run: func(cmd *cobra.Command, args []string) {
-		requester.ExecRequest(htppMethod, urlPath, filepath)
+		requester.ExecRequest(htppMethod, urlPath,
+			filepath, colorize)
 	},
 }
 
@@ -62,4 +64,8 @@ func init() {
 	rootCmd.MarkFlagRequired("filepath")
 	//TODO: add custom error
 	// if err := rootCmd.MarkFlagRequired("url"); err != nil {
+
+	rootCmd.Flags().BoolVarP(&colorize, "colorize", "c", false,
+		"Colorizes the output")
+
 }
