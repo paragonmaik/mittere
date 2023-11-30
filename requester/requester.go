@@ -2,13 +2,13 @@ package requester
 
 import (
 	"fmt"
-	"io"
 	"net/http"
 	"os"
 	"strings"
 
 	"mittere/errs"
 	"mittere/reader"
+	"mittere/writer"
 	"time"
 )
 
@@ -42,7 +42,8 @@ func handleMethod(envMethod, fileMethod string) (string, error) {
 	return envMethod, nil
 }
 
-func makeRequest(url, data, method string, headers map[string]string) {
+func makeRequest(url, data, method string,
+	headers map[string]string) *http.Response {
 	body := strings.NewReader(data)
 
 	req, err := http.NewRequest(method, url, body)
@@ -62,13 +63,7 @@ func makeRequest(url, data, method string, headers map[string]string) {
 		os.Exit(1)
 	}
 
-	defer res.Body.Close()
-
-	content, _ := io.ReadAll(res.Body)
-
-	fmt.Println(string(content))
-
-	defer res.Body.Close()
+	return res
 }
 
 func ExecRequest(httpMethod, urlPath, filepath string) {
@@ -93,6 +88,7 @@ func ExecRequest(httpMethod, urlPath, filepath string) {
 		os.Exit(1)
 	}
 
-	// return request values to pass to the writer package
-	makeRequest(url, data.Data, method, data.Headers)
+	res := makeRequest(url, data.Data, method, data.Headers)
+
+	writer.Write(res)
 }
