@@ -42,6 +42,12 @@ func handleMethod(envMethod, fileMethod string) (string, error) {
 	return envMethod, nil
 }
 
+func setHeaders(h http.Header, headers map[string]string) {
+	for k, v := range headers {
+		h.Set(k, v)
+	}
+}
+
 func makeRequest(url, data, method string,
 	headers map[string]string) *http.Response {
 	body := strings.NewReader(data)
@@ -52,10 +58,7 @@ func makeRequest(url, data, method string,
 		os.Exit(1)
 	}
 
-	req.Header = http.Header{
-		"Content-Type":  {headers["Content-Type"]},
-		"Authorization": {headers["Authorization"]},
-	}
+	setHeaders(req.Header, headers)
 
 	res, err := client.Do(req)
 	if err != nil {
