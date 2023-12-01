@@ -42,7 +42,7 @@ func TestWriter(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			status, body := Write(testCase.input, false)
+			status, body := Write(testCase.input, false, "blue")
 			if status != testCase.expectedStatus {
 				t.Errorf("Expected out: %s, received %s", status,
 					testCase.expectedStatus)
