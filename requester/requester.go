@@ -66,7 +66,9 @@ func makeRequest(url, data, method string,
 	return res
 }
 
-func ExecRequest(httpMethod, urlPath, filepath string) {
+func ExecRequest(httpMethod, urlPath,
+	filepath, selectedColor string,
+	colorize bool) {
 	client = &http.Client{Timeout: 10 * time.Second}
 
 	data, err := reader.Read(filepath)
@@ -90,5 +92,5 @@ func ExecRequest(httpMethod, urlPath, filepath string) {
 
 	res := makeRequest(url, data.Data, method, data.Headers)
 
-	writer.Write(res)
+	writer.Write(res, colorize, selectedColor)
 }
