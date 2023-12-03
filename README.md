@@ -10,3 +10,4 @@
   </pre>
 </div>
 
+A simple cUrl like tool built in go that reads yaml and json to make htpp requests.
