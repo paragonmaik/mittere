@@ -1,0 +1,12 @@
+{
+  "url": "http://localhost:3000/user",
+  "method": "post",
+  "data": {
+    "userName": "paragon",
+    "email": "email@test1.com",
+    "password": "12345678"
+  },
+  "headers": {
+    "Content-Type": "application/json"
+  }
+}
