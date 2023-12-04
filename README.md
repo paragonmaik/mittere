@@ -10,4 +10,4 @@
   </pre>
 </div>
 
-A simple cUrl like tool built in go, leveraging the Cobra library that reads yaml and json to make htpp requests.
+A simple cUrl like tool built in go with the Cobra library. Mittere reads yaml and json files to make htpp requests.
