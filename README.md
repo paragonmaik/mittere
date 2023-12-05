@@ -11,3 +11,27 @@
 </div>
 
 A simple cUrl like tool built in go with the Cobra library. Mittere reads yaml and json files to make htpp requests.
+
+## Installation
+
+## Usage
+
+## Help
+
+## Sample (test.json)
+
+### GET
+
+### POST
+
+### PUT
+
+### DELETE
+
+## Sample (test.yaml)
+
+### Options
+
+```sh
+
+```
