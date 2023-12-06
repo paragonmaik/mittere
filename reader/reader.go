@@ -33,11 +33,19 @@ type Request struct {
 }
 
 func mapToString(m map[string]string) string {
+	mapLen := len(m)
+	loopCount := 0
+
 	b := new(bytes.Buffer)
 	for k, v := range m {
-		fmt.Fprintf(b, "%s=\"%s\"\n", k, v)
+		loopCount++
+		if loopCount == mapLen {
+			fmt.Fprintf(b, `"%s":"%s"`, k, v)
+			break
+		}
+		fmt.Fprintf(b, `"%s":"%s",`, k, v)
 	}
-	return b.String()
+	return "{" + b.String() + "}"
 }
 
 func unmarshalRequestJson(content []byte) RequestJson {
