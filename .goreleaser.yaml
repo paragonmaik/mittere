@@ -24,6 +24,17 @@ release:
 universal_binaries:
   - replace: true
 
+brews:
+  - 
+    name: mittere
+    homepage: https://github.com/paragonmaik/mittere
+    tap:
+      owner: paragonmaik
+      name: homebrew-clitools
+    commit_author:
+      name: paragonmaik
+      email: estevan.maik@gmail.com
+
 archives:
   - format: tar.gz
     name_template: >-
