@@ -63,7 +63,7 @@ mittere -u "url" -m "method" -f "path/to/file.json"
 
 ### (test.yaml)
 ```yaml
-url: aaaaa
+url:
 method:
 data:
 headers:
